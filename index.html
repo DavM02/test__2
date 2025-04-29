@@ -17,7 +17,7 @@
              
             <div class="fragment" id="fragment-1">
 
-                <video autoplay muted loop playsinline class="background-video">
+                <video muted loop playsinline class="background-video">
                     <source src="./video.mp4" type="video/mp4">
                 </video>
 
@@ -25,7 +25,7 @@
         to make healthy 
        
             <div class="fragment" id="fragment-2">
-                <video autoplay muted loop playsinline class="background-video">
+                <video muted loop playsinline class="background-video">
                     <source src="./video.mp4" type="video/mp4">
                 </video>
             </div>
@@ -33,7 +33,7 @@
                 living effortless, so you can 
         
             <div class="fragment" id="fragment-3">
-                <video autoplay muted loop playsinline class="background-video">
+                <video muted loop playsinline class="background-video">
                     <source src="./video.mp4" type="video/mp4">
                 </video>
             </div>
@@ -41,7 +41,7 @@
                  live longer and happier 
             
             <div class="fragment" id="fragment-4">
-                <video autoplay muted loop playsinline class="background-video">
+                <video muted loop playsinline class="background-video">
                     <source src="./video.mp4" type="video/mp4">
                 </video>
             </div>
@@ -49,38 +49,48 @@
 
 
     </section>
-    <script>
 
-    document.addEventListener("DOMContentLoaded", () => {
-         const updateVideoPosition = () => {
-       
-            const fragments = document.querySelectorAll(".fragment");
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const videos = Array.from(document.querySelectorAll(".background-video"));
+    const fragments = document.querySelectorAll(".fragment");
 
-            fragments.forEach(fragment => {
-                const video = fragment.querySelector(".background-video");
+    const updateVideoPositions = () => {
+        fragments.forEach(fragment => {
+            const video = fragment.querySelector(".background-video");
+            const rect = fragment.getBoundingClientRect();
+            video.style.left = `-${rect.left}px`;
+            video.style.top = `-${rect.top}px`;
+            video.style.width = `${window.innerWidth}px`;
+            video.style.height = `${window.innerHeight}px`;
+        });
+    };
 
-                if (video) {
-                    const rect = fragment.getBoundingClientRect();
+    let loadedCount = 0;
+    videos.forEach(video => {
+        video.addEventListener("loadeddata", () => {
+            loadedCount++;
+            if (loadedCount === videos.length) {
+                videos.forEach(v => {
+                    v.currentTime = 0;
+                });
+                setTimeout(() => {
+                    videos.forEach(v => {
+                        v.play();
+                    });
+                }, 0);
+            }
+        });
 
-                
-                    video.style.left = `-${rect.left}px`;
-                    video.style.top = `-${rect.top}px`;
-
-                
-                    video.style.width = `${window.innerWidth}px`;
-                    video.style.height = `${window.innerHeight}px`;
-                }
-            });
-        };
- 
-        window.addEventListener("resize", updateVideoPosition);
-
- 
-        updateVideoPosition();
+        video.pause();
     });
 
+    window.addEventListener("resize", updateVideoPositions);
+    updateVideoPositions();
+});
+</script>
 
-    </script>
+
 </body>
 
 </html>
